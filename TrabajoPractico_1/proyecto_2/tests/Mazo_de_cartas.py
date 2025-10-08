@@ -172,7 +172,7 @@ class Mazo:
 # Código de prueba para verificar que funciona correctamente
 if __name__ == "__main__":
     # Importar Carta para las pruebas
-    from carta import Carta
+    from modules.carta import Carta
     
     print("=== PRUEBAS DEL MAZO ===\n")
     
