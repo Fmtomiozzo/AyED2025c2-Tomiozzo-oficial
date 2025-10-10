@@ -1,4 +1,4 @@
-from GraficosModulos1 import ListaDobleEnlazada
+from modules.GraficosModulos1 import ListaDobleEnlazada
 import unittest
 import random
 
