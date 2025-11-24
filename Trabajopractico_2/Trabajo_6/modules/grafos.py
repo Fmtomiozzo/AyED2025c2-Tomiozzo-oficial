@@ -1,5 +1,5 @@
 from collections import defaultdict, deque
-import heapq
+from modules.monticulo_binario import MonticuloBinario  # ← Importar tu montículo
 
 
 def grafo_no_dirigido(edges):
@@ -52,17 +52,17 @@ def mst_prim(adj, raiz):
         return [], 0
 
     visitado = set([raiz])
-    heap = []
+    heap = MonticuloBinario()  # ← Tu montículo
 
     # Inicializar heap con las aristas que salen de la raíz
     for v, w in adj[raiz]:
-        heapq.heappush(heap, (w, raiz, v))
+        heap.insertar((w, raiz, v))  # ← insertar()
 
     mst = []
     total = 0
 
-    while heap:
-        w, u, v = heapq.heappop(heap)
+    while not heap.esta_vacio():  # ← esta_vacio()
+        w, u, v = heap.eliminarMin()  # ← eliminarMin()
         if v in visitado:
             continue
         # Agregamos arista al MST
@@ -73,7 +73,7 @@ def mst_prim(adj, raiz):
         # Nuevas aristas que salen de v
         for x, wx in adj[v]:
             if x not in visitado:
-                heapq.heappush(heap, (wx, v, x))
+                heap.insertar((wx, v, x))  # ← insertar()
 
     return mst, total
 
@@ -98,8 +98,6 @@ def enraizar_mst(mst, raiz):
     children = {n: [] for n in N}
 
     if raiz in N:
-        from collections import deque
-
         vis = {raiz}
         q = deque([raiz])
         while q:
