@@ -1,6 +1,11 @@
 import os
 from modules.lector import leer_aristas_csv_comas, ALDEAS_FILE
-from modules.grafos import grafo_no_dirigido, alcanzables, mst_prim, enraizar_mst
+from modules.grafos import (
+    construir_grafo_no_dirigido,
+    alcanzables,
+    mst_prim,
+    enraizar_mst,
+)
 
 ORIGEN = "Peligros"
 
@@ -15,24 +20,27 @@ def main():
     if not edges:
         raise SystemExit("No se pudieron leer aristas del archivo.")
 
-    # 3) Construir grafo no dirigido
-    adj, nodos = grafo_no_dirigido(edges)
+    # 3) Construir grafo no dirigido (objeto Grafo)
+    g = construir_grafo_no_dirigido(edges)
 
-    if ORIGEN not in nodos:
+    if not g.contiene(ORIGEN):
         raise SystemExit(f"No existe la aldea origen '{ORIGEN}' en el archivo.")
 
-    # 4) (opcional) comprobar alcanzables
-    R = alcanzables(adj, ORIGEN)
+    # 4) Aldeas alcanzables desde el origen
+    R = alcanzables(g, ORIGEN)
     if not R:
         raise SystemExit("No hay aldeas alcanzables desde el origen.")
 
     # 5) Calcular MST con Prim
-    mst, total = mst_prim(adj, ORIGEN)
+    mst, total = mst_prim(g, ORIGEN)
 
     # Validación simple: si el MST no conectó todos los alcanzables
     esperadas = max(0, len(R) - 1)
     if len(mst) != esperadas:
-        print(f"AVISO: el MST encontrado tiene {len(mst)} aristas, se esperaban {esperadas} para {len(R)} nodos alcanzables.")
+        print(
+            f"AVISO: el MST encontrado tiene {len(mst)} aristas, "
+            f"se esperaban {esperadas} para {len(R)} nodos alcanzables."
+        )
         # No cortamos el programa, solo avisamos.
 
     # 6) Enraizar MST

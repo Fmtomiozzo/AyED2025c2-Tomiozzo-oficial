@@ -167,7 +167,6 @@ class ListaDobleEnlazada:
 
         # Intercambiar punteros siguiente y anterior para cada nodo
         while actual is not None:
-            # Intercambiar punteros
             actual.siguiente, actual.anterior = actual.anterior, actual.siguiente
             actual = actual.anterior  # Moverse al siguiente (que ahora es anterior)
 

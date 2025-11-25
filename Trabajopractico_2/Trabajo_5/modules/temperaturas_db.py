@@ -7,12 +7,18 @@ from .AVL import ArbolAVL, NodoAVL   # usa el AVL genérico
 
 class Temperaturas_DB:
     def __init__(self):
-        self._arbol = ArbolAVL()     # AVL interno
+        self._arbol = ArbolAVL()    # AVL interno
 
     # ---- conversión fechas ----
 
     def _to_dt(self, s: str) -> datetime:
-        # limpia espacios y posible BOM al inicio (por si el archivo es UTF-16 LE)
+        """
+        Convierte un string de fecha a datetime.
+        Acepta formatos:
+          - 'dd/mm/YYYY'
+          - 'YYYY-mm-dd'
+        Limpia espacios y posible BOM al inicio.
+        """
         s = s.strip().lstrip('\ufeff')
         for fmt in ("%d/%m/%Y", "%Y-%m-%d"):
             try:
@@ -22,6 +28,7 @@ class Temperaturas_DB:
         raise ValueError(f"Formato de fecha inválido: {s!r}")
 
     def _to_str(self, d: datetime) -> str:
+        """Convierte datetime a string 'dd/mm/YYYY'."""
         return d.strftime("%d/%m/%Y")
 
     # ---- API pública ----
@@ -105,25 +112,39 @@ class Temperaturas_DB:
     # ---- carga desde archivo ----
 
     def cargar_desde_archivo(self) -> Tuple[int, int]:
+        """
+        Carga datos desde 'muestras.txt' (en el mismo directorio).
+        Devuelve (líneas_procesadas, registros_cargados).
+        """
         ruta = os.path.join(os.path.dirname(__file__), "muestras.txt")
-        lp = rc = 0
-        # el archivo está en UTF‑16 LE, por eso usamos ese encoding
-        with open(ruta, "r", encoding="utf-16-le") as f:
+        lineas_procesadas = 0
+        registros_cargados = 0
+
+        # el archivo que subiste está en UTF-8 con BOM, así que encoding='utf-8-sig' es lo más robusto
+        with open(ruta, "r", encoding="utf-8-sig") as f:
             for linea in f:
                 s = linea.strip()
                 if not s:
                     continue
 
-                # limpia posible BOM al inicio de la primera línea
+                # Por si todavía quedara algún BOM en la primera línea
                 s = s.lstrip('\ufeff')
 
-                partes = s.split(';') if ';' in s else (s.split(',') if ',' in s else [])
+                # Separa por ';' o por ',' si hiciera falta
+                if ';' in s:
+                    partes = s.split(';')
+                elif ',' in s:
+                    partes = s.split(',')
+                else:
+                    continue
+
                 if len(partes) != 2:
                     continue
 
                 fecha_str = partes[0].strip()
                 temp = float(partes[1].strip())
                 self.guardar_temperatura(temp, fecha_str)
-                lp += 1
-                rc += 1
-        return lp, rc
+                lineas_procesadas += 1
+                registros_cargados += 1
+
+        return lineas_procesadas, registros_cargados

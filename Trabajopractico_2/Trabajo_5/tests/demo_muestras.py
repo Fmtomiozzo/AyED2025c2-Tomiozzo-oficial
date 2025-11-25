@@ -1,5 +1,6 @@
 from modules.temperaturas_db import Temperaturas_DB
 
+
 def main():
     db = Temperaturas_DB()
 
@@ -42,6 +43,7 @@ def main():
 
     # cantidad_muestras final
     print(f"cantidad_muestras: {db.cantidad_muestras()}")
+
 
 if __name__ == "__main__":
     main()

@@ -17,7 +17,10 @@ class Mazo:
         self._lista.agregar_al_final(carta)
 
     def sacar_carta_arriba(self, mostrar=False):
-        """Extrae y devuelve la carta superior. Si mostrar=True, marca visible si existe."""
+        """
+        Extrae y devuelve la carta superior.
+        Si mostrar=True, intenta marcarla como visible.
+        """
         if len(self._lista) == 0:
             raise DequeEmptyError("No se puede sacar una carta de un mazo vacío")
         carta = self._lista.extraer(0)
@@ -25,6 +28,7 @@ class Mazo:
             try:
                 carta.visible = True
             except AttributeError:
+                # Por si no es una Carta o no tiene atributo visible
                 pass
         return carta
 

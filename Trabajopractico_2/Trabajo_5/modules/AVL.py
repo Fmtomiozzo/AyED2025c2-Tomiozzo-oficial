@@ -1,5 +1,6 @@
-# modules/avl.py
+# modules/AVL.py
 from typing import Optional, Any
+
 
 class NodoAVL:
     def __init__(self, clave: Any, valor: Any):
@@ -15,7 +16,8 @@ class ArbolAVL:
         self.raiz: Optional[NodoAVL] = None
         self.cantidad: int = 0
 
-    # utilidades internas
+    # ---- utilidades internas ----
+
     def _h(self, n: Optional[NodoAVL]) -> int:
         return n.altura if n else 0
 
@@ -66,14 +68,14 @@ class ArbolAVL:
         b = self._bal(n)
 
         # Casos de rotación
-        if b > 1 and c < n.izq.clave:
+        if b > 1 and c < n.izq.clave:           # Izq-Izq
             return self._rot_der(n)
-        if b < -1 and c > n.der.clave:
+        if b < -1 and c > n.der.clave:          # Der-Der
             return self._rot_izq(n)
-        if b > 1 and c > n.izq.clave:
+        if b > 1 and c > n.izq.clave:           # Izq-Der
             n.izq = self._rot_izq(n.izq)
             return self._rot_der(n)
-        if b < -1 and c < n.der.clave:
+        if b < -1 and c < n.der.clave:          # Der-Izq
             n.der = self._rot_der(n.der)
             return self._rot_izq(n)
 
@@ -124,6 +126,7 @@ class ArbolAVL:
         self._upd(n)
         b = self._bal(n)
 
+        # Rebalanceo después de eliminar
         if b > 1 and self._bal(n.izq) >= 0:
             return self._rot_der(n)
         if b > 1 and self._bal(n.izq) < 0:

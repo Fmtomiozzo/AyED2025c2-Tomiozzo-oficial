@@ -3,29 +3,16 @@
 class MonticuloBinario:
     """
     Implementación de un Montículo Binario Mínimo (Min-Heap) usando una lista.
-    Sigue la lógica de Runestone Academy para la implementación manual.
-
-    Propiedades clave:
-    1. Estructura: Es un árbol binario completo, representado eficientemente por una lista.
-       - El elemento en listaMonticulo[0] es un valor de relleno (no se usa).
-       - El hijo izquierdo de un nodo en posición 'i' está en '2*i'.
-       - El hijo derecho de un nodo en posición 'i' está en '2*i + 1'.
-       - El padre de un nodo en posición 'i' está en 'i // 2'.
-    2. Orden: Para cada nodo 'N' con padre 'P', la clave de 'N' es mayor o igual
-       a la clave de 'P'. Esto asegura que el elemento más pequeño siempre está en la raíz.
+    El elemento más pequeño siempre queda en la raíz (posición 1).
     """
 
     def __init__(self):
         """Inicializa un montículo vacío."""
-        self.listaMonticulo = [0]
+        self.listaMonticulo = [0]  # índice 0 de relleno
         self.tamanoActual = 0
 
     def infiltArriba(self, i):
-        """
-        Mueve el elemento en la posición 'i' hacia arriba en el montículo
-        hasta que se restaure la propiedad de orden del montículo.
-        Se usa después de insertar un nuevo elemento al final.
-        """
+        """Mueve el elemento en posición i hacia arriba hasta restaurar el orden."""
         while i // 2 > 0:
             if self.listaMonticulo[i] < self.listaMonticulo[i // 2]:
                 self.listaMonticulo[i], self.listaMonticulo[i // 2] = \
@@ -34,8 +21,7 @@ class MonticuloBinario:
 
     def insertar(self, k):
         """
-        Inserta un nuevo elemento 'k' en el montículo.
-        Primero lo añade al final de la lista y luego lo "infiltra" hacia arriba.
+        Inserta un nuevo elemento k en el montículo.
         Complejidad: O(log n)
         """
         self.listaMonticulo.append(k)
@@ -43,24 +29,19 @@ class MonticuloBinario:
         self.infiltArriba(self.tamanoActual)
 
     def hijoMin(self, i):
-        """
-        Encuentra y devuelve el índice del hijo con el valor más pequeño
-        para el nodo en la posición 'i'.
-        """
+        """Devuelve el índice del hijo más chico del nodo en i."""
         if i * 2 + 1 > self.tamanoActual:
+            # Solo tiene hijo izquierdo
             return i * 2
         else:
+            # Tiene dos hijos, elegimos el menor
             if self.listaMonticulo[i * 2] < self.listaMonticulo[i * 2 + 1]:
                 return i * 2
             else:
                 return i * 2 + 1
 
     def infiltAbajo(self, i):
-        """
-        Mueve el elemento en la posición 'i' hacia abajo en el montículo
-        hasta que se restaure la propiedad de orden del montículo.
-        Se usa después de reemplazar la raíz con el último elemento.
-        """
+        """Mueve el elemento en posición i hacia abajo hasta restaurar el orden."""
         while (i * 2) <= self.tamanoActual:
             hm = self.hijoMin(i)
             if self.listaMonticulo[i] > self.listaMonticulo[hm]:
@@ -70,9 +51,8 @@ class MonticuloBinario:
 
     def eliminarMin(self):
         """
-        Elimina y devuelve el elemento más pequeño (la raíz) del montículo.
-        Para mantener la propiedad de estructura, el último elemento se mueve a la raíz,
-        y luego se "infiltra" hacia abajo.
+        Elimina y devuelve el elemento mínimo (raíz).
+        Devuelve None si está vacío.
         Complejidad: O(log n)
         """
         if self.tamanoActual == 0:
@@ -90,9 +70,8 @@ class MonticuloBinario:
 
     def construirMonticulo(self, unaLista):
         """
-        Construye un montículo a partir de una lista de elementos.
-        Es más eficiente que insertar uno por uno.
-        Complejidad: O(n)
+        Construye un montículo a partir de una lista.
+        Más eficiente que insertar uno a uno. O(n)
         """
         i = len(unaLista) // 2
         self.tamanoActual = len(unaLista)
@@ -102,7 +81,7 @@ class MonticuloBinario:
             i -= 1
 
     def esta_vacio(self):
-        """Devuelve True si el montículo no contiene elementos."""
+        """Devuelve True si el montículo está vacío."""
         return self.tamanoActual == 0
 
     def tamano(self):
@@ -110,8 +89,5 @@ class MonticuloBinario:
         return self.tamanoActual
 
     def ver_lista_interna(self):
-        """
-        Devuelve una copia de la lista interna del montículo (sin el 0 inicial).
-        Útil para depuración o visualización.
-        """
+        """Devuelve una copia de la lista interna sin el 0 inicial."""
         return self.listaMonticulo[1:]

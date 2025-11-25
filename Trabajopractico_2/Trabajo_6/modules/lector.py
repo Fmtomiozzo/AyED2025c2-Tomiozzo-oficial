@@ -11,7 +11,7 @@ def norm(s: str) -> str:
 
 def leer_aristas_csv_comas(path: str = ALDEAS_FILE):
     """
-    Lee aristas desde un archivo CSV separado por comas.
+    Lee aristas desde un archivo separado por comas.
     Cada línea: origen, destino, peso.
     Devuelve una lista de tuplas (u, v, w).
     """
